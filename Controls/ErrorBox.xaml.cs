@@ -1,9 +1,4 @@
-// Pages use it like this:
-//   ErrorBox.Show("Could not reach the server");   -> red banner + Retry
-//   ErrorBox.ShowInfo("You're offline ...");       -> soft blue note
-//   ErrorBox.Hide();                                -> hide it
-//   ErrorBox.Retry += ...                           -> what to do when Retry is tapped
-// The colours are theme colours (see ThemeService.cs), so they follow dark / light mode.
+// A reusable themed message banner that displays errors, information, and retry actions.
 namespace AndiswaConsultationApp.Controls;
 
 public partial class ErrorBox : ContentView

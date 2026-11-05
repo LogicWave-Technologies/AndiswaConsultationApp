@@ -1,15 +1,6 @@
-// ============================================================================
+
 // ClientSession.cs  -  remembers WHO is logged in to the client portal
-// ----------------------------------------------------------------------------
-// After a good login the API sends back a "token" (a long secret text that
-// proves who you are). We keep it, with the client's name and email, so:
-//   - the dashboard can ask the API for "my quotes" and "my projects"
-//   - the client stays logged in when the app is closed and opened again
-//
-// The token is saved in SecureStorage (the phone's protected storage).
-// If SecureStorage is not available (it can fail on Windows when the app is
-// not packaged), we fall back to Preferences so the app keeps working.
-// ============================================================================
+
 namespace AndiswaConsultationApp.Services;
 
 public static class ClientSession

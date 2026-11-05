@@ -3,11 +3,7 @@ namespace AndiswaConsultationApp.Services;
 
 public static class ApiConfig
 {
-    // ==================== TEST MODE ====================
-    // true  = the app does NOT connect to any server. Login, register, Google sign-in,
-    //         the quote form and the dashboard all work with pretend data saved on
-    //         the device (see Services/FakeBackend.cs). Test login: demo@abc.test / Demo1234!
-    // false = use the real API, database and SSO (when the team has finished them).
+   
     public static bool TestMode { get; } = true;
     // ===================================================
 

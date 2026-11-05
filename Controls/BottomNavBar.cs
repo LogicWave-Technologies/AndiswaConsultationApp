@@ -1,20 +1,4 @@
-// ============================================================================
-// BottomNavBar.cs  -  the app's navigation bar at the BOTTOM of the screen
-// ----------------------------------------------------------------------------
-// This is one of the things that makes the app feel like an APP and not a website:
-//
-//   [ Home ]  [ Services ]  ( + Quote )  [ Work ]  [ More ]
-//
-//   - The coral button in the middle is a "floating action button": the most
-//     important thing you can do in this app (ask for a quote) is always one tap away.
-//   - The open tab gets a soft blue "pill" behind its icon (like Android's Material 3).
-//   - Every tap gives a small vibration (Services/Haptics.cs).
-//
-// .NET MAUI's built-in tab bar sits at the TOP on Windows, so AppShell.xaml hides it
-// (Shell.TabBarIsVisible="False") and every tab page shows this bar instead,
-// through the "TabPage" template in App.xaml.
-// The icons are drawn with Path (vector lines), so their colour follows dark / light mode.
-// ============================================================================
+// A custom bottom navigation bar for switching between the app's main pages.
 using AndiswaConsultationApp.Services;
 using Microsoft.Maui.Controls.Shapes;
 using Path = Microsoft.Maui.Controls.Shapes.Path;

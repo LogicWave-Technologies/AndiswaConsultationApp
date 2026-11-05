@@ -1,18 +1,4 @@
-// ============================================================================
-// GoogleSignInButton.cs  -  the "Continue with Google" button (SINGLE SIGN-ON)
-// ----------------------------------------------------------------------------
-// Used on the login page AND the register page:
-//      <controls:GoogleSignInButton />
-//
-// What happens when it is tapped:
-//   1. The browser opens on Google's sign-in page (through our API).
-//   2. While the client signs in there, this control shows
-//      "Finish signing in with Google in your browser..." and a Cancel button.
-//   3. When Google says yes, the API makes a login token, this control saves it
-//      (ClientSession) and opens the dashboard. Exactly the same result as a
-//      normal email + password login.
-// The real work is in ApiService.GoogleSignInAsync and the API's SsoController.cs.
-// ============================================================================
+// A reusable Google sign-in button for the login and registration pages.
 using AndiswaConsultationApp.Services;
 using Microsoft.Extensions.DependencyInjection;   // GetService<T>()
 

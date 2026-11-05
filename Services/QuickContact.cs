@@ -1,11 +1,6 @@
 // ============================================================================
 // QuickContact.cs  -  "Call", "WhatsApp", "Email" and "Directions" buttons
-// ----------------------------------------------------------------------------
-// These open the PHONE's own apps (dialler, WhatsApp, mail app, maps).
-// That is one of the things that makes this an app and not a website:
-// one tap and you are talking to the studio.
-// The details come from the API (AppState.Studio); if they are not loaded yet
-// we use the fixed details in SiteContent.
+
 // ============================================================================
 using AndiswaConsultationApp.Models;
 

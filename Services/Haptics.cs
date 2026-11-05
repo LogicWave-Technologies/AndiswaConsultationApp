@@ -1,9 +1,5 @@
 // ============================================================================
 // Haptics.cs  -  a tiny vibration when an important button is tapped
-// ----------------------------------------------------------------------------
-// This is something a website cannot do: the phone gives a small "click"
-// you can feel. Used on the Quote button, the service tiles, sending a form ...
-// If the phone (or Windows) has no vibration, nothing happens.
 // ============================================================================
 namespace AndiswaConsultationApp.Services;
 

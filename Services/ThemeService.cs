@@ -1,13 +1,6 @@
 ﻿// ============================================================================
 // ThemeService.cs  -  the APP's own look (colours + font), light and dark
-// ----------------------------------------------------------------------------
-// The app has its OWN identity, different from the website:
-//   Website = dark navy, serious, long scrolling sections.
-//   App     = bright "sky blue" + a warm coral accent, rounded cards,
-//             the Poppins font, and a floating "Quote" button.
-//
-// Pages use the colours with {DynamicResource Primary} etc., so when dark mode
-// is switched on here, every page changes colour straight away.
+
 // ============================================================================
 namespace AndiswaConsultationApp.Services;
 

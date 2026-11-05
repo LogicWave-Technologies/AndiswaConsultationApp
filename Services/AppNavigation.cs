@@ -1,13 +1,4 @@
-// ============================================================================
-// AppNavigation.cs  -  ONE place for "go to that page" code
-// ----------------------------------------------------------------------------
-// Every page uses these helpers, so navigation always works the same way.
-//
-//   "//Contact"          = SWITCH to the Contact tab ("//" means "start from the tab bar")
-//   "about", "team" ...  = OPEN that page on top of the current one (it gets a back arrow)
-//
-// The page names ("about", "team", "testimonials", "projectdetail") are registered in AppShell.xaml.cs.
-// ============================================================================
+
 using AndiswaConsultationApp.Models;
 
 namespace AndiswaConsultationApp.Services;

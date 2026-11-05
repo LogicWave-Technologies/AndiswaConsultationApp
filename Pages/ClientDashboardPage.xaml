@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  ClientDashboardPage.xaml  -  "My account": the client's quotes and projects.
+
+  App style instead of the website's portal page:
+    - a profile header with your initials and a Log out button
+    - two counter tiles (quotes / projects)
+    - every quote and project is a card with a coloured STATUS chip
+      (blue = new, amber = in progress, green = accepted / done, red = declined)
+    - pull down to refresh
+  The data comes from the API: GET /api/client/dashboard.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:AndiswaConsultationApp.Controls"
+             x:Class="AndiswaConsultationApp.Pages.ClientDashboardPage"
+             BackgroundColor="{DynamicResource PageBg}"
+             ControlTemplate="{StaticResource TabPage}"
+             Shell.NavBarIsVisible="False">
+
+    <RefreshView x:Name="Refresh" RefreshColor="{DynamicResource Primary}" Refreshing="OnRefreshing">
+        <ScrollView>
+            <VerticalStackLayout Padding="20,44,20,28" Spacing="16">
+
+                <!-- ===== 1. PROFILE HEADER ===== -->
+                <Grid ColumnDefinitions="56,*,Auto" ColumnSpacing="14">
+                    <Border BackgroundColor="{DynamicResource Primary}" StrokeThickness="0" StrokeShape="RoundRectangle 28"
+                            WidthRequest="56" HeightRequest="56">
+                        <Label x:Name="InitialsLabel" FontSize="18" TextColor="{DynamicResource OnPrimary}"
+                               FontFamily="{DynamicResource HeadingFont}"
+                               HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0">
+                        <Label Text="My account" Style="{StaticResource Caption}" FontSize="12" />
+                        <Label x:Name="WelcomeLabel" Text="Welcome" Style="{StaticResource SectionTitle}"
+                               LineBreakMode="TailTruncation" />
+                    </VerticalStackLayout>
+                    <Button Grid.Column="2" Text="Log out" Style="{StaticResource OutlineButton}" HeightRequest="38"
+                            FontSize="12" Padding="14,0" VerticalOptions="Center" Clicked="OnLogoutClicked" />
+                </Grid>
+
+                <controls:ErrorBox x:Name="ErrorBox" />
+                <ActivityIndicator x:Name="Busy" IsRunning="False" IsVisible="False" Color="{DynamicResource Primary}" />
+
+                <!-- ===== 2. COUNTER TILES ===== -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <Border BackgroundColor="{DynamicResource PrimarySoft}" StrokeThickness="0" StrokeShape="RoundRectangle 20" Padding="16">
+                        <VerticalStackLayout Spacing="0">
+                            <Label x:Name="QuoteCount" Text="0" FontSize="30" FontFamily="{DynamicResource HeadingFont}"
+                                   TextColor="{DynamicResource Primary}" />
+                            <Label Text="Quote requests" Style="{StaticResource Caption}" FontSize="12" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="1" BackgroundColor="{DynamicResource AccentSoft}" StrokeThickness="0" StrokeShape="RoundRectangle 20" Padding="16">
+                        <VerticalStackLayout Spacing="0">
+                            <Label x:Name="ProjectCount" Text="0" FontSize="30" FontFamily="{DynamicResource HeadingFont}"
+                                   TextColor="{DynamicResource Accent}" />
+                            <Label Text="Projects" Style="{StaticResource Caption}" FontSize="12" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <Button Text="+  New quote request" Style="{StaticResource AccentButton}" Clicked="OnNewQuoteClicked" />
+
+                <!-- ===== 3. YOUR QUOTE REQUESTS ===== -->
+                <Label Text="Your quote requests" Style="{StaticResource SectionTitle}" Margin="0,8,0,0" />
+
+                <Border x:Name="NoQuotesLabel" IsVisible="False" Style="{StaticResource Card}">
+                    <Label Style="{StaticResource Caption}"
+                           Text="You have not sent any quote requests yet. Tap “New quote request” to start one." />
+                </Border>
+
+                <VerticalStackLayout x:Name="QuotesList" Spacing="10">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource Card}" Padding="16">
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                        <Label Text="{Binding Service}" Style="{StaticResource CardTitle}" VerticalOptions="Center" />
+                                        <Border Grid.Column="1" BackgroundColor="{Binding StatusBackground}" StrokeThickness="0"
+                                                StrokeShape="RoundRectangle 10" Padding="10,3" VerticalOptions="Center">
+                                            <Label Text="{Binding Status}" FontSize="11" TextColor="{Binding StatusColor}"
+                                                   FontFamily="{DynamicResource HeadingFont}" />
+                                        </Border>
+                                    </Grid>
+                                    <Label Text="{Binding Message}" FontSize="13" LineHeight="1.4"
+                                           TextColor="{DynamicResource Muted}" MaxLines="3" LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding CreatedAt, StringFormat='Sent {0:d MMM yyyy}'}" FontSize="11"
+                                           TextColor="{DynamicResource Soft}" IsVisible="{Binding HasDate}" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <!-- ===== 4. YOUR PROJECTS ===== -->
+                <Label Text="Your projects" Style="{StaticResource SectionTitle}" Margin="0,8,0,0" />
+
+                <Border x:Name="NoProjectsLabel" IsVisible="False" Style="{StaticResource Card}">
+                    <Label Style="{StaticResource Caption}"
+                           Text="A project will appear here once your quote has been accepted and the project has been created." />
+                </Border>
+
+                <VerticalStackLayout x:Name="ProjectsList" Spacing="10">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource Card}" Padding="16">
+                                <Grid ColumnDefinitions="40,*,Auto" ColumnSpacing="12">
+                                    <Border Style="{StaticResource IconCircle}" WidthRequest="40" HeightRequest="40"
+                                            StrokeShape="RoundRectangle 12" BackgroundColor="{DynamicResource AccentSoft}">
+                                        <Label Text="🎨" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center" />
+                                    </Border>
+                                    <Label Grid.Column="1" Text="{Binding Title}" Style="{StaticResource CardTitle}"
+                                           VerticalOptions="Center" />
+                                    <Border Grid.Column="2" BackgroundColor="{Binding StatusBackground}" StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 10" Padding="10,3" VerticalOptions="Center"
+                                            IsVisible="{Binding HasStatus}">
+                                        <Label Text="{Binding Status}" FontSize="11" TextColor="{Binding StatusColor}"
+                                               FontFamily="{DynamicResource HeadingFont}" />
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
+</ContentPage>

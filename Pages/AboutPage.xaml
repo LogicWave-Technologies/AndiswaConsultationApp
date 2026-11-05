@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  AboutPage.xaml  -  About the studio (opened from More or Home).
+  Short and card-based for a phone: photo card, two paragraphs, mission + vision side by side,
+  value chips and a button to the team. No website footer or newsletter.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:AndiswaConsultationApp.Models"
+             x:Class="AndiswaConsultationApp.Pages.AboutPage"
+             Title="About us"
+             BackgroundColor="{DynamicResource PageBg}"
+             Shell.NavBarIsVisible="True">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,8,20,32" Spacing="18">
+
+            <!-- ===== 1. PHOTO CARD ===== -->
+            <Border StrokeThickness="0" StrokeShape="RoundRectangle 24" HeightRequest="220"
+                    BackgroundColor="{DynamicResource SurfaceAlt}">
+                <Grid>
+                    <Image Source="andiswa_branding.jpg" Aspect="AspectFill" />
+                    <Border BackgroundColor="{DynamicResource Surface}" StrokeThickness="0" StrokeShape="RoundRectangle 14"
+                            Padding="14,8" HorizontalOptions="Start" VerticalOptions="End" Margin="14">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="5+" FontSize="22" FontFamily="{DynamicResource HeadingFont}"
+                                   TextColor="{DynamicResource Accent}" VerticalOptions="Center" />
+                            <Label Text="years of design" FontSize="12" TextColor="{DynamicResource Muted}"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- ===== 2. WHO WE ARE ===== -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="A creative studio built on bold ideas" Style="{StaticResource SectionTitle}" FontSize="20" />
+                <Label Text="{Binding AboutText1}" FontSize="14" LineHeight="1.5" />
+                <Label Text="{Binding AboutText2}" FontSize="13" LineHeight="1.45" TextColor="{DynamicResource Muted}" />
+            </VerticalStackLayout>
+
+            <!-- ===== 3. MISSION AND VISION side by side ===== -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <Border BackgroundColor="{DynamicResource PrimarySoft}" StrokeThickness="0" StrokeShape="RoundRectangle 20" Padding="16">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="🎯" FontSize="22" />
+                        <Label Text="Mission" FontSize="13" FontFamily="{DynamicResource HeadingFont}" TextColor="{DynamicResource Primary}" />
+                        <Label Text="{x:Static models:SiteContent.Mission}" FontSize="13" LineHeight="1.35" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="1" BackgroundColor="{DynamicResource AccentSoft}" StrokeThickness="0" StrokeShape="RoundRectangle 20" Padding="16">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="🔭" FontSize="22" />
+                        <Label Text="Vision" FontSize="13" FontFamily="{DynamicResource HeadingFont}" TextColor="{DynamicResource Accent}" />
+                        <Label Text="{x:Static models:SiteContent.Vision}" FontSize="13" LineHeight="1.35" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- ===== 4. OUR VALUES as chips ===== -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="What we stand for" Style="{StaticResource SectionTitle}" />
+                <FlexLayout Wrap="Wrap" Direction="Row"
+                            BindableLayout.ItemsSource="{x:Static models:SiteContent.Values}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Border BackgroundColor="{DynamicResource Surface}" Stroke="{DynamicResource Line}" StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 14" Padding="14,8" Margin="0,0,8,8">
+                                <Label Text="{Binding .}" FontSize="12" FontFamily="{DynamicResource HeadingFont}" />
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+            </VerticalStackLayout>
+
+            <!-- ===== 5. TEAM ===== -->
+            <Button Text="Meet the team" Style="{StaticResource PrimaryButton}" Clicked="OnTeamClicked" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

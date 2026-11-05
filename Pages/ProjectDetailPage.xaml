@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  ProjectDetailPage.xaml  -  one design, full screen.
+
+  App features here:
+    - the design fills the top of the screen on a dark background
+    - round floating Back and Share buttons over the picture
+    - the details slide up on a rounded "sheet"
+    - Share opens the phone's own share menu (WhatsApp, Instagram, email ...)
+    - the "Request a similar design" button stays at the bottom (sticky)
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:AndiswaConsultationApp.Models"
+             x:Class="AndiswaConsultationApp.Pages.ProjectDetailPage"
+             Title="Project"
+             BackgroundColor="{DynamicResource PageBg}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="*,Auto" RowSpacing="0">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Spacing="0">
+
+                <!-- The design, shown whole, on a dark background -->
+                <Grid HeightRequest="400" BackgroundColor="#0B111C">
+                    <Image Source="{Binding Image}" Aspect="AspectFit" Margin="0,70,0,40" />
+                </Grid>
+
+                <!-- The rounded sheet with the details -->
+                <Border BackgroundColor="{DynamicResource PageBg}" StrokeThickness="0"
+                        StrokeShape="RoundRectangle 28,28,0,0" Margin="0,-28,0,0" Padding="20,14,20,24">
+                    <VerticalStackLayout Spacing="14">
+
+                        <!-- the small grab handle of the sheet -->
+                        <BoxView WidthRequest="40" HeightRequest="5" CornerRadius="3" Color="{DynamicResource Line}"
+                                 HorizontalOptions="Center" />
+
+                        <Border BackgroundColor="{DynamicResource AccentSoft}" StrokeThickness="0" StrokeShape="RoundRectangle 10"
+                                Padding="10,4" HorizontalOptions="Start" Margin="0,6,0,0">
+                            <Label Text="{Binding Category}" FontSize="12" FontFamily="{DynamicResource HeadingFont}"
+                                   TextColor="{DynamicResource Accent}" />
+                        </Border>
+
+                        <Label Text="{Binding Title}" Style="{StaticResource ScreenTitle}" FontSize="24" />
+                        <Label Text="{Binding Description}" FontSize="15" LineHeight="1.45" TextColor="{DynamicResource Muted}" />
+
+                        <!-- Tools / tags as chips (only the featured project has them) -->
+                        <FlexLayout Wrap="Wrap" Direction="Row" IsVisible="{Binding HasHighlights}"
+                                    BindableLayout.ItemsSource="{Binding Highlights}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BackgroundColor="{DynamicResource PrimarySoft}" StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 12" Padding="12,6" Margin="0,0,8,8">
+                                        <Label Text="{Binding .}" FontSize="12" TextColor="{DynamicResource Primary}"
+                                               FontFamily="{DynamicResource HeadingFont}" />
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+
+                        <!-- Project details as a settings-style list -->
+                        <Border Style="{StaticResource Card}" Padding="16,4">
+                            <VerticalStackLayout Spacing="0">
+                                <Grid ColumnDefinitions="*,Auto" Padding="0,12">
+                                    <Label Text="Client" Style="{StaticResource Caption}" />
+                                    <Label Grid.Column="1" Text="{x:Static models:SiteContent.ProjectClient}" FontSize="13"
+                                           HorizontalTextAlignment="End" />
+                                </Grid>
+                                <BoxView HeightRequest="1" Color="{DynamicResource Line}" />
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16" Padding="0,12">
+                                    <Label Text="Software" Style="{StaticResource Caption}" />
+                                    <Label Grid.Column="1" Text="{x:Static models:SiteContent.ProjectSoftware}" FontSize="13"
+                                           HorizontalTextAlignment="End" />
+                                </Grid>
+                                <BoxView HeightRequest="1" Color="{DynamicResource Line}" />
+                                <Grid ColumnDefinitions="*,Auto" Padding="0,12">
+                                    <Label Text="Type" Style="{StaticResource Caption}" />
+                                    <Label Grid.Column="1" Text="{x:Static models:SiteContent.ProjectCategory}" FontSize="13"
+                                           HorizontalTextAlignment="End" />
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Floating round buttons over the picture -->
+        <!-- InputTransparent: the empty middle lets your finger scroll the page; the two buttons still work -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" Padding="16,44,16,0" VerticalOptions="Start"
+              InputTransparent="True" CascadeInputTransparent="False">
+            <Border BackgroundColor="#66000000" StrokeThickness="0" StrokeShape="RoundRectangle 22"
+                    WidthRequest="44" HeightRequest="44" SemanticProperties.Description="Back">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBackTapped" />
+                </Border.GestureRecognizers>
+                <Path Stroke="White" StrokeThickness="2.2" StrokeLineCap="Round" StrokeLineJoin="Round"
+                      WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="Center"
+                      Data="M19,12 H5 M12,19 L5,12 L12,5" />
+            </Border>
+            <Border Grid.Column="2" BackgroundColor="#66000000" StrokeThickness="0" StrokeShape="RoundRectangle 22"
+                    WidthRequest="44" HeightRequest="44" SemanticProperties.Description="Share">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnShareTapped" />
+                </Border.GestureRecognizers>
+                <Path Stroke="White" StrokeThickness="2.2" StrokeLineCap="Round" StrokeLineJoin="Round"
+                      WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="Center"
+                      Data="M4,12 V20 A2,2 0 0 0 6,22 H18 A2,2 0 0 0 20,20 V12 M16,6 L12,2 L8,6 M12,2 V15" />
+            </Border>
+        </Grid>
+
+        <!-- Sticky bottom bar -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="10" Padding="20,10,20,16"
+              BackgroundColor="{DynamicResource Surface}">
+            <Button Text="Request a similar design" Style="{StaticResource AccentButton}" Clicked="OnRequestClicked" />
+            <Button Grid.Column="1" Text="Share" Style="{StaticResource OutlineButton}" Padding="18,0"
+                    Clicked="OnShareClicked" />
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  HomePage.xaml  -  the app's HOME screen.
+
+  It is built like an app "home", not like the website's landing page:
+    1. A personal greeting ("Good morning, Ayanda") + the account button
+    2. One compact "Start a quote" card (not a full-screen website hero)
+    3. Quick actions that use the phone: Call, WhatsApp, Email, Directions
+    4. Small number chips you can swipe sideways
+    5. Swipe rows: popular services and recent work
+    6. A swipe carousel of client reviews with dots underneath
+    No website footer and no newsletter: the bottom bar is always there instead.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:AndiswaConsultationApp.Controls"
+             xmlns:models="clr-namespace:AndiswaConsultationApp.Models"
+             x:Class="AndiswaConsultationApp.Pages.HomePage"
+             BackgroundColor="{DynamicResource PageBg}"
+             ControlTemplate="{StaticResource TabPage}"
+             Shell.NavBarIsVisible="False">
+
+    <!-- RefreshView: pull the page down to load fresh data from the server -->
+    <RefreshView x:Name="Refresh" RefreshColor="{DynamicResource Primary}">
+        <ScrollView>
+            <VerticalStackLayout Padding="0,44,0,28" Spacing="24">
+
+                <!-- ===== 1. GREETING + ACCOUNT BUTTON ===== -->
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" Padding="20,0">
+                    <!-- Small logo tile -->
+                    <Border BackgroundColor="Black" StrokeThickness="0" StrokeShape="RoundRectangle 14"
+                            WidthRequest="46" HeightRequest="46" VerticalOptions="Center">
+                        <Image Source="ab_logo.jpg" Aspect="AspectFill" />
+                    </Border>
+
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0">
+                        <Label x:Name="GreetingLabel" Text="Hello 👋" Style="{StaticResource Caption}" />
+                        <Label x:Name="NameLabel" Text="What shall we create?" Style="{StaticResource SectionTitle}"
+                               LineBreakMode="TailTruncation" />
+                    </VerticalStackLayout>
+
+                    <!-- Account circle: your initials when logged in, otherwise a person icon -->
+                    <Border Grid.Column="2" Style="{StaticResource IconCircle}" StrokeShape="RoundRectangle 23"
+                            WidthRequest="46" HeightRequest="46" VerticalOptions="Center"
+                            SemanticProperties.Description="My account">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAccountTapped" />
+                        </Border.GestureRecognizers>
+                        <Grid>
+                            <Path x:Name="AccountIcon" Stroke="{DynamicResource Primary}" StrokeThickness="2"
+                                  StrokeLineCap="Round" StrokeLineJoin="Round" WidthRequest="24" HeightRequest="24"
+                                  HorizontalOptions="Center" VerticalOptions="Center"
+                                  Data="M19,21 V19 A4,4 0 0 0 15,15 H9 A4,4 0 0 0 5,19 V21 M12,3 A4,4 0 1 1 12,11 A4,4 0 1 1 12,3 Z" />
+                            <Label x:Name="InitialsLabel" IsVisible="False" FontSize="15"
+                                   FontFamily="{DynamicResource HeadingFont}" TextColor="{DynamicResource Primary}"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- Message banner (hidden unless offline or something went wrong) -->
+                <controls:ErrorBox x:Name="ErrorBox" Margin="20,-8,20,0" />
+
+                <!-- ===== 2. START-A-QUOTE CARD ===== -->
+                <Border StrokeThickness="0" StrokeShape="RoundRectangle 26" Margin="20,0" Padding="0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#3B7BEA" Offset="0.0" />
+                            <GradientStop Color="#2D6CDF" Offset="0.5" />
+                            <GradientStop Color="#1C4FB0" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid>
+                        <!-- Two soft circles for decoration -->
+                        <Ellipse Fill="#22FFFFFF" WidthRequest="170" HeightRequest="170"
+                                 HorizontalOptions="End" VerticalOptions="Start" Margin="0,-60,-50,0" />
+                        <Ellipse Fill="#33FF7A45" WidthRequest="110" HeightRequest="110"
+                                 HorizontalOptions="End" VerticalOptions="End" Margin="0,0,-30,-40" />
+
+                        <VerticalStackLayout Padding="22,22,22,22" Spacing="12">
+                            <Border BackgroundColor="#26FFFFFF" StrokeThickness="0" StrokeShape="RoundRectangle 10"
+                                    Padding="10,4" HorizontalOptions="Start">
+                                <Label Text="{Binding Tagline}" FontSize="11" TextColor="White"
+                                       FontFamily="{DynamicResource HeadingFont}" />
+                            </Border>
+                            <Label Text="Got an idea? Let's design it." FontSize="24" LineHeight="1.15"
+                                   FontFamily="{DynamicResource HeadingFont}" TextColor="White" />
+                            <Label Text="Tell us what you need in under 2 minutes. We reply within one business day."
+                                   FontSize="13" LineHeight="1.35" TextColor="#DCE6FA" />
+                            <Button Text="Start my free quote" Style="{StaticResource AccentButton}"
+                                    HorizontalOptions="Start" Padding="22,0" HeightRequest="48" Margin="0,6,0,0"
+                                    Clicked="OnQuoteClicked" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- ===== 3. QUICK ACTIONS (use the phone's own apps) ===== -->
+                <Grid ColumnDefinitions="*,*,*,*" Padding="20,0">
+                    <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                        <VerticalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnCallTapped" />
+                        </VerticalStackLayout.GestureRecognizers>
+                        <Border Style="{StaticResource IconCircle}" WidthRequest="58" HeightRequest="58" StrokeShape="RoundRectangle 20">
+                            <Path Stroke="{DynamicResource Primary}" StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
+                                  WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="Center"
+                                  Data="M22,16.92 V19.92 A2,2 0 0 1 19.82,21.92 A19.79,19.79 0 0 1 11.19,18.85 A19.5,19.5 0 0 1 5.19,12.85 A19.79,19.79 0 0 1 2.12,4.18 A2,2 0 0 1 4.11,2 H7.11 A2,2 0 0 1 9.11,3.72 A12.84,12.84 0 0 0 9.81,6.53 A2,2 0 0 1 9.36,8.64 L8.09,9.91 A16,16 0 0 0 14.09,15.91 L15.36,14.64 A2,2 0 0 1 17.47,14.19 A12.84,12.84 0 0 0 20.28,14.89 A2,2 0 0 1 22,16.92 Z" />
+                        </Border>
+                        <Label Text="Call" FontSize="12" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="1" Spacing="6" HorizontalOptions="Center">
+                        <VerticalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnWhatsAppTapped" />
+                        </VerticalStackLayout.GestureRecognizers>
+                        <Border Style="{StaticResource IconCircle}" WidthRequest="58" HeightRequest="58" StrokeShape="RoundRectangle 20"
+                                BackgroundColor="{DynamicResource SuccessSoft}">
+                            <Path Stroke="{DynamicResource Success}" StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
+                                  WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="Center"
+                                  Data="M7.9,20 A9,9 0 1 0 4,16.1 L2,22 Z" />
+                        </Border>
+                        <Label Text="WhatsApp" FontSize="12" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="2" Spacing="6" HorizontalOptions="Center">
+                        <VerticalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnEmailTapped" />
+                        </VerticalStackLayout.GestureRecognizers>
+                        <Border Style="{StaticResource IconCircle}" WidthRequest="58" HeightRequest="58" StrokeShape="RoundRectangle 20"
+                                BackgroundColor="{DynamicResource AccentSoft}">
+                            <Path Stroke="{DynamicResource Accent}" StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
+                                  WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="Center"
+                                  Data="M4,4 H20 A2,2 0 0 1 22,6 V18 A2,2 0 0 1 20,20 H4 A2,2 0 0 1 2,18 V6 A2,2 0 0 1 4,4 Z M22,7 L13,12.7 A1.94,1.94 0 0 1 11,12.7 L2,7" />
+                        </Border>
+                        <Label Text="Email" FontSize="12" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="3" Spacing="6" HorizontalOptions="Center">
+                        <VerticalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnDirectionsTapped" />
+                        </VerticalStackLayout.GestureRecognizers>
+                        <Border Style="{StaticResource IconCircle}" WidthRequest="58" HeightRequest="58" StrokeShape="RoundRectangle 20"
+                                BackgroundColor="{DynamicResource WarningSoft}">
+                            <Path Stroke="{DynamicResource Warning}" StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
+                                  WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="Center"
+                                  Data="M20,10 C20,14.99 14.46,20.19 12.6,21.8 A1,1 0 0 1 11.4,21.8 C9.54,20.19 4,14.99 4,10 A8,8 0 0 1 20,10 Z M12,7 A3,3 0 1 1 12,13 A3,3 0 1 1 12,7 Z" />
+                        </Border>
+                        <Label Text="Directions" FontSize="12" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Grid>
+
+                <!-- ===== 4. NUMBER CHIPS (created in HomePage.xaml.cs, BuildStats, from the database) ===== -->
+                <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                    <HorizontalStackLayout x:Name="StatsLayout" Spacing="10" Padding="20,0" />
+                </ScrollView>
+
+                <!-- ===== 5. POPULAR SERVICES (swipe sideways) ===== -->
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto" Padding="20,0">
+                        <Label Text="Popular services" Style="{StaticResource SectionTitle}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="See all" Style="{StaticResource LinkLabel}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnServicesTapped" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+
+                    <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                        <HorizontalStackLayout Spacing="12" Padding="20,0"
+                                               BindableLayout.ItemsSource="{x:Static models:SiteContent.HomeServices}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource Card}" WidthRequest="150" Padding="14">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnServiceTapped" />
+                                        </Border.GestureRecognizers>
+                                        <VerticalStackLayout Spacing="10">
+                                            <Border Style="{StaticResource IconCircle}" HorizontalOptions="Start">
+                                                <Label Text="{Binding Icon}" FontSize="22"
+                                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                                            </Border>
+                                            <Label Text="{Binding Title}" Style="{StaticResource CardTitle}" FontSize="14"
+                                                   MaxLines="2" LineBreakMode="TailTruncation" />
+                                            <Label Text="{Binding Description}" FontSize="12" LineHeight="1.3"
+                                                   TextColor="{DynamicResource Muted}" MaxLines="3" LineBreakMode="TailTruncation" />
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
+                    </ScrollView>
+                </VerticalStackLayout>
+
+                <!-- ===== 6. RECENT WORK (swipe sideways) ===== -->
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto" Padding="20,0">
+                        <Label Text="Recent work" Style="{StaticResource SectionTitle}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="See all" Style="{StaticResource LinkLabel}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnWorkTapped" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+
+                    <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                        <HorizontalStackLayout Spacing="12" Padding="20,0"
+                                               BindableLayout.ItemsSource="{x:Static models:SiteContent.HomeProjects}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Border StrokeThickness="0" StrokeShape="RoundRectangle 20" WidthRequest="160" HeightRequest="210"
+                                            BackgroundColor="{DynamicResource SurfaceAlt}">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnProjectTapped" />
+                                        </Border.GestureRecognizers>
+                                        <Grid>
+                                            <Image Source="{Binding Image}" Aspect="AspectFill" />
+                                            <!-- Dark fade at the bottom so the white text is readable -->
+                                            <BoxView VerticalOptions="End" HeightRequest="100">
+                                                <BoxView.Background>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                        <GradientStop Color="#00000000" Offset="0" />
+                                                        <GradientStop Color="#CC0B111C" Offset="1" />
+                                                    </LinearGradientBrush>
+                                                </BoxView.Background>
+                                            </BoxView>
+                                            <VerticalStackLayout VerticalOptions="End" Padding="12" Spacing="0">
+                                                <Label Text="{Binding Category}" FontSize="11" TextColor="#FFC9B3" />
+                                                <Label Text="{Binding Title}" FontSize="14" TextColor="White"
+                                                       FontFamily="{DynamicResource HeadingFont}"
+                                                       MaxLines="2" LineBreakMode="TailTruncation" />
+                                            </VerticalStackLayout>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
+                    </ScrollView>
+                </VerticalStackLayout>
+
+                <!-- ===== 7. CLIENT REVIEWS (swipe one card at a time, dots underneath) ===== -->
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto" Padding="20,0">
+                        <Label Text="Client love" Style="{StaticResource SectionTitle}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="All reviews" Style="{StaticResource LinkLabel}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTestimonialsTapped" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+
+                    <CarouselView x:Name="ReviewsCarousel" HeightRequest="200" Loop="False"
+                                  PeekAreaInsets="20,0,40,0"
+                                  ItemsSource="{x:Static models:SiteContent.HomeTestimonials}">
+                        <CarouselView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="12"
+                                               SnapPointsType="MandatorySingle" SnapPointsAlignment="Center" />
+                        </CarouselView.ItemsLayout>
+                        <CarouselView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource Card}" Padding="18">
+                                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
+                                        <Label Text="{Binding Stars}" FontSize="15" TextColor="{DynamicResource Accent}" />
+                                        <Label Grid.Row="1" Text="{Binding Quote}" FontSize="13" LineHeight="1.4"
+                                               MaxLines="4" LineBreakMode="TailTruncation" />
+                                        <HorizontalStackLayout Grid.Row="2" Spacing="10">
+                                            <Border BackgroundColor="{Binding AvatarColor}" StrokeThickness="0"
+                                                    StrokeShape="RoundRectangle 18" WidthRequest="36" HeightRequest="36">
+                                                <Label Text="{Binding Initials}" FontSize="13" TextColor="White"
+                                                       FontFamily="{DynamicResource HeadingFont}"
+                                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                                            </Border>
+                                            <VerticalStackLayout VerticalOptions="Center" Spacing="0">
+                                                <Label Text="{Binding Name}" Style="{StaticResource CardTitle}" FontSize="13" />
+                                                <Label Text="{Binding Role}" FontSize="11" TextColor="{DynamicResource Muted}" />
+                                            </VerticalStackLayout>
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CarouselView.ItemTemplate>
+                    </CarouselView>
+
+                    <IndicatorView x:Name="ReviewDots" HorizontalOptions="Center"
+                                   IndicatorColor="{DynamicResource Line}" SelectedIndicatorColor="{DynamicResource Primary}"
+                                   IndicatorSize="8" />
+                </VerticalStackLayout>
+
+                <!-- ===== 8. MEET THE STUDIO (a single row, opens About) ===== -->
+                <Border Style="{StaticResource Card}" Margin="20,0" Padding="12">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnAboutTapped" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="64,*,Auto" ColumnSpacing="14">
+                        <Border StrokeThickness="0" StrokeShape="RoundRectangle 14" WidthRequest="64" HeightRequest="64">
+                            <Image Source="andiswa_branding.jpg" Aspect="AspectFill" />
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                            <Label Text="Meet the studio" Style="{StaticResource CardTitle}" />
+                            <Label Text="Our story, mission and the team" Style="{StaticResource Caption}" />
+                        </VerticalStackLayout>
+                        <Path Grid.Column="2" Stroke="{DynamicResource Soft}" StrokeThickness="2" StrokeLineCap="Round"
+                              StrokeLineJoin="Round" WidthRequest="24" HeightRequest="24" VerticalOptions="Center"
+                              Data="M9,18 L15,12 L9,6" />
+                    </Grid>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
+</ContentPage>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  TeamPage.xaml  -  the people of the studio, as contact cards with one-tap Email.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:AndiswaConsultationApp.Models"
+             x:Class="AndiswaConsultationApp.Pages.TeamPage"
+             Title="Team"
+             BackgroundColor="{DynamicResource PageBg}"
+             Shell.NavBarIsVisible="True">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,8,20,32" Spacing="14">
+
+            <Label Text="Strategy, design and delivery under one roof. This is who you'll work with."
+                   Style="{StaticResource Caption}" FontSize="14" LineHeight="1.4" />
+
+            <!-- One contact card for every team member -->
+            <VerticalStackLayout Spacing="12" BindableLayout.ItemsSource="{x:Static models:SiteContent.Team}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}">
+                            <VerticalStackLayout Spacing="14">
+                                <Grid ColumnDefinitions="64,*" ColumnSpacing="14">
+                                    <Border BackgroundColor="{DynamicResource Primary}" StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 32" WidthRequest="64" HeightRequest="64">
+                                        <Label Text="{Binding Initials}" FontSize="22" TextColor="{DynamicResource OnPrimary}"
+                                               FontFamily="{DynamicResource HeadingFont}"
+                                               HorizontalOptions="Center" VerticalOptions="Center" />
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0">
+                                        <Label Text="{Binding Name}" Style="{StaticResource CardTitle}" FontSize="17" />
+                                        <Label Text="{Binding Role}" FontSize="13" TextColor="{DynamicResource Accent}" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                                <Button Text="Send an email" Style="{StaticResource OutlineButton}" HeightRequest="46"
+                                        Clicked="OnEmailClicked" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

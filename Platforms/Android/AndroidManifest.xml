@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+	<!-- usesCleartextTraffic only matters when you test against the API on your own PC (http).
+	     The Azure address uses https, which is always allowed. -->
+	<application android:allowBackup="true"
+	             android:icon="@mipmap/appicon"
+	             android:roundIcon="@mipmap/appicon_round"
+	             android:supportsRtl="true"
+	             android:usesCleartextTraffic="true"></application>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<!-- A small vibration when important buttons are tapped (Services/Haptics.cs) -->
+	<uses-permission android:name="android.permission.VIBRATE" />
+	<!-- Lets the app open a browser tab for "Continue with Google" (single sign-on).
+	     Android 11+ only lets apps see browsers that are listed here. -->
+	<queries>
+		<intent>
+			<action android:name="android.support.customtabs.action.CustomTabsService" />
+		</intent>
+		<intent>
+			<action android:name="android.intent.action.VIEW" />
+			<data android:scheme="https" />
+		</intent>
+		<intent>
+			<action android:name="android.intent.action.VIEW" />
+			<data android:scheme="http" />
+		</intent>
+	</queries>
+</manifest>

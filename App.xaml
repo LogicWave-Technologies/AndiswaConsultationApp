@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  App.xaml  -  the THEME of the whole app (colours and styles).
+
+  The app has its own look, on purpose different from the website:
+    - bright sky blue + warm coral accent (the website is dark navy)
+    - the Poppins font (rounded and friendly, made for small screens)
+    - rounded "app" cards and buttons instead of web sections and pill links
+
+  Colours are used with {DynamicResource Name} so they change live with dark mode.
+  The values here are the LIGHT theme; ThemeService.cs swaps them for the dark values.
+-->
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:AndiswaConsultationApp.Controls"
+             x:Class="AndiswaConsultationApp.App">
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <!-- ============ COLOURS (light theme values, see ThemeService.cs) ============ -->
+            <Color x:Key="Primary">#2D6CDF</Color>
+            <Color x:Key="PrimaryDark">#1C4FB0</Color>
+            <Color x:Key="PrimarySoft">#E7EFFD</Color>
+            <Color x:Key="OnPrimary">#FFFFFF</Color>
+            <Color x:Key="Accent">#FF7A45</Color>
+            <Color x:Key="AccentSoft">#FFEDE4</Color>
+            <Color x:Key="PageBg">#F3F6FB</Color>
+            <Color x:Key="Surface">#FFFFFF</Color>
+            <Color x:Key="SurfaceAlt">#EDF2F9</Color>
+            <Color x:Key="Ink">#101828</Color>
+            <Color x:Key="Muted">#5D6B82</Color>
+            <Color x:Key="Soft">#98A2B3</Color>
+            <Color x:Key="Line">#E4E9F2</Color>
+            <Color x:Key="Success">#12A26B</Color>
+            <Color x:Key="SuccessSoft">#E2F6EC</Color>
+            <Color x:Key="Warning">#B97800</Color>
+            <Color x:Key="WarningSoft">#FFF3D6</Color>
+            <Color x:Key="ErrorBg">#FFF1F0</Color>
+            <Color x:Key="ErrorLine">#F3C2BE</Color>
+            <Color x:Key="ErrorText">#B42318</Color>
+
+            <!-- Fonts. Set again by ThemeService when the user picks another font in Settings. -->
+            <x:String x:Key="AppFontFamily">Poppins</x:String>
+            <x:String x:Key="HeadingFont">PoppinsSemiBold</x:String>
+
+            <!-- Apply the chosen font to every Label, Button, Entry, Editor and Picker -->
+            <Style TargetType="Label">
+                <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
+                <Setter Property="TextColor" Value="{DynamicResource Ink}" />
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="FontFamily" Value="{DynamicResource HeadingFont}" />
+            </Style>
+            <Style TargetType="Entry">
+                <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
+            </Style>
+            <Style TargetType="Editor">
+                <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
+            </Style>
+            <Style TargetType="Picker">
+                <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
+            </Style>
+
+            <!-- ============ TEXT STYLES ============ -->
+
+            <!-- Big title at the top of a screen, e.g. "Our work" -->
+            <Style x:Key="ScreenTitle" TargetType="Label">
+                <Setter Property="FontFamily" Value="{DynamicResource HeadingFont}" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="TextColor" Value="{DynamicResource Ink}" />
+            </Style>
+
+            <!-- Title of a group on a screen, e.g. "Popular services" -->
+            <Style x:Key="SectionTitle" TargetType="Label">
+                <Setter Property="FontFamily" Value="{DynamicResource HeadingFont}" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="{DynamicResource Ink}" />
+            </Style>
+
+            <!-- Title inside a card -->
+            <Style x:Key="CardTitle" TargetType="Label">
+                <Setter Property="FontFamily" Value="{DynamicResource HeadingFont}" />
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="TextColor" Value="{DynamicResource Ink}" />
+            </Style>
+
+            <!-- Small grey text -->
+            <Style x:Key="Caption" TargetType="Label">
+                <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="{DynamicResource Muted}" />
+            </Style>
+
+            <!-- Blue tappable text, e.g. "See all" -->
+            <Style x:Key="LinkLabel" TargetType="Label">
+                <Setter Property="FontFamily" Value="{DynamicResource HeadingFont}" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="{DynamicResource Primary}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Padding" Value="8,6" />
+            </Style>
+
+            <!-- ============ BUTTONS ============ -->
+
+            <!-- Main button: filled blue, rounded corners (an app button, not a web "pill" link) -->
+            <Style x:Key="PrimaryButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{DynamicResource Primary}" />
+                <Setter Property="TextColor" Value="{DynamicResource OnPrimary}" />
+                <Setter Property="FontFamily" Value="{DynamicResource HeadingFont}" />
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="HeightRequest" Value="54" />
+            </Style>
+
+            <!-- Coral button for the most important action on a screen -->
+            <Style x:Key="AccentButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{DynamicResource Accent}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontFamily" Value="{DynamicResource HeadingFont}" />
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="HeightRequest" Value="54" />
+            </Style>
+
+            <!-- Second button: soft blue background, blue text ("tonal" button).
+                 The key is still called OutlineButton so older code keeps working. -->
+            <Style x:Key="OutlineButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{DynamicResource PrimarySoft}" />
+                <Setter Property="TextColor" Value="{DynamicResource Primary}" />
+                <Setter Property="BorderWidth" Value="0" />
+                <Setter Property="FontFamily" Value="{DynamicResource HeadingFont}" />
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="HeightRequest" Value="54" />
+            </Style>
+
+            <!-- ============ CARDS AND FIELDS ============ -->
+
+            <!-- A rounded card -->
+            <Style x:Key="Card" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{DynamicResource Surface}" />
+                <Setter Property="Stroke" Value="{DynamicResource Line}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+                <Setter Property="Padding" Value="18" />
+            </Style>
+
+            <!-- A round coloured circle behind an icon -->
+            <Style x:Key="IconCircle" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{DynamicResource PrimarySoft}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+            </Style>
+
+            <!-- Filled text box (like Android / iOS text fields, no outline) -->
+            <Style x:Key="FieldBorder" TargetType="Border">
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+                <Setter Property="Padding" Value="14,0" />
+                <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceAlt}" />
+            </Style>
+
+            <!-- The text box inside the filled box -->
+            <Style x:Key="FieldEntry" TargetType="Entry">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
+                <Setter Property="TextColor" Value="{DynamicResource Ink}" />
+                <Setter Property="PlaceholderColor" Value="{DynamicResource Soft}" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="HeightRequest" Value="54" />
+            </Style>
+
+            <!-- The small title above each field -->
+            <Style x:Key="FieldLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontFamily" Value="{DynamicResource HeadingFont}" />
+                <Setter Property="TextColor" Value="{DynamicResource Muted}" />
+                <Setter Property="Margin" Value="4,14,0,6" />
+            </Style>
+
+            <!-- ============ TAB PAGE TEMPLATE ============
+                 Every tab page uses this with  ControlTemplate="{StaticResource TabPage}".
+                 It puts the page's own content on top (ContentPresenter)
+                 and the app's navigation bar at the bottom (BottomNavBar). -->
+            <ControlTemplate x:Key="TabPage">
+                <Grid RowDefinitions="*,Auto" RowSpacing="0">
+                    <ContentPresenter Grid.Row="0" />
+                    <controls:BottomNavBar Grid.Row="1" />
+                </Grid>
+            </ControlTemplate>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  AppShell.xaml  -  the NAVIGATION of the app: the tabs (Home, Services, Quote = Contact, Work = Portfolio, More)
+  plus the login and register screens that come BEFORE the app, and the client dashboard.
+  Pages opened on top (About, Team, Testimonials, Settings, project detail) are registered in AppShell.xaml.cs.
+  The Shell.* colours use {DynamicResource ...} so they follow dark / light mode.
+
+  Shell.TabBarIsVisible="False": the built-in tab bar is HIDDEN, because on Windows it sits at the top.
+  Instead every tab page shows our own bar at the bottom (Controls/BottomNavBar.cs, added by the
+  "TabPage" template in App.xaml). The tabs below still exist so "//Home", "//Contact" ... keep working.
+-->
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:pages="clr-namespace:AndiswaConsultationApp.Pages"
+       x:Class="AndiswaConsultationApp.AppShell"
+       Shell.FlyoutBehavior="Disabled"
+       Shell.NavBarIsVisible="False"
+       Shell.BackgroundColor="{DynamicResource PageBg}"
+       Shell.ForegroundColor="{DynamicResource Ink}"
+       Shell.TitleColor="{DynamicResource Ink}"
+       Shell.TabBarBackgroundColor="{DynamicResource Surface}"
+       Shell.TabBarForegroundColor="{DynamicResource Primary}"
+       Shell.TabBarTitleColor="{DynamicResource Primary}"
+       Shell.TabBarUnselectedColor="{DynamicResource Soft}"
+       Shell.TabBarIsVisible="False">
+
+    <!-- ===== 1. LOGIN FIRST =====
+         The first item is the screen the app opens on, so the app always starts at the login.
+         These two are outside the TabBar, so they have no bottom bar: you cannot reach Home
+         until you have logged in or created an account. -->
+    <ShellContent Title="Log in" Route="ClientLogin"
+                  ContentTemplate="{DataTemplate pages:ClientLoginPage}" />
+    <ShellContent Title="Create Account" Route="ClientRegister"
+                  ContentTemplate="{DataTemplate pages:ClientRegisterPage}" />
+
+    <!-- ===== 2. THE APP (only after logging in) ===== -->
+    <TabBar>
+        <ShellContent Title="Home" Icon="tab_home.png" Route="Home"
+                      ContentTemplate="{DataTemplate pages:HomePage}" />
+        <ShellContent Title="Services" Icon="tab_services.png" Route="Services"
+                      ContentTemplate="{DataTemplate pages:ServicesPage}" />
+        <ShellContent Title="Portfolio" Icon="tab_portfolio.png" Route="Portfolio"
+                      ContentTemplate="{DataTemplate pages:PortfolioPage}" />
+        <ShellContent Title="Contact" Icon="tab_contact.png" Route="Contact"
+                      ContentTemplate="{DataTemplate pages:ContactPage}" />
+        <ShellContent Title="More" Icon="tab_more.png" Route="More"
+                      ContentTemplate="{DataTemplate pages:MorePage}" />
+
+        <!-- My account (opened from the account circle on Home and the card on More) -->
+        <ShellContent Title="My Dashboard" Route="ClientDashboard"
+                      ContentTemplate="{DataTemplate pages:ClientDashboardPage}" />
+    </TabBar>
+</Shell>

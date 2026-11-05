@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  PortfolioPage.xaml  -  the WORK tab (portfolio).
+
+  Built like a photo app / Pinterest instead of the website's gallery page:
+    - a round search box and filter chips
+    - a "masonry" grid: two columns of picture tiles with different heights
+    - tap a tile to open it full screen (ProjectDetailPage)
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AndiswaConsultationApp.Pages.PortfolioPage"
+             BackgroundColor="{DynamicResource PageBg}"
+             ControlTemplate="{StaticResource TabPage}"
+             Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="0,44,0,28" Spacing="16">
+
+            <!-- ===== 1. TITLE ===== -->
+            <VerticalStackLayout Padding="20,0" Spacing="0">
+                <Label Text="Our work" Style="{StaticResource ScreenTitle}" />
+                <Label x:Name="CountLabel" Style="{StaticResource Caption}" />
+            </VerticalStackLayout>
+
+            <!-- ===== 2. SEARCH ===== -->
+            <Border Style="{StaticResource FieldBorder}" StrokeShape="RoundRectangle 18" Margin="20,0" Padding="14,0">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                    <Path Stroke="{DynamicResource Soft}" StrokeThickness="2" StrokeLineCap="Round"
+                          WidthRequest="24" HeightRequest="24" VerticalOptions="Center"
+                          Data="M11,4 A7,7 0 1 1 11,18 A7,7 0 1 1 11,4 Z M20,20 L16,16" />
+                    <Entry x:Name="SearchEntry" Grid.Column="1" Placeholder="Search designs" Style="{StaticResource FieldEntry}"
+                           HeightRequest="48" TextChanged="OnSearchTextChanged" ReturnType="Search" />
+                </Grid>
+            </Border>
+
+            <!-- ===== 3. FILTER CHIPS (created in PortfolioPage.xaml.cs) ===== -->
+            <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                <HorizontalStackLayout x:Name="FilterLayout" Spacing="8" Padding="20,0" />
+            </ScrollView>
+
+            <!-- ===== 4. MASONRY GRID: two columns filled in PortfolioPage.xaml.cs ===== -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Padding="20,4,20,0">
+                <VerticalStackLayout x:Name="LeftColumn" Spacing="12" />
+                <VerticalStackLayout x:Name="RightColumn" Grid.Column="1" Spacing="12" />
+            </Grid>
+
+            <!-- Nothing found -->
+            <VerticalStackLayout x:Name="EmptyPanel" IsVisible="False" Spacing="6" Padding="20,30,20,0">
+                <Label Text="🔍" FontSize="36" HorizontalOptions="Center" />
+                <Label Text="No designs found" Style="{StaticResource CardTitle}" HorizontalOptions="Center" />
+                <Label Text="Try another word or filter." Style="{StaticResource Caption}" HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

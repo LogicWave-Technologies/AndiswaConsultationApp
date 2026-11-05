@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  ContactPage.xaml  -  the QUOTE screen (the coral "+" button in the bottom bar).
+
+  The website has one long contact form. The app splits it into 3 short steps,
+  like a phone checkout, so it is easy to fill in with one thumb:
+
+     Step 1  What do you need?   tap a service tile (no drop-down list)
+     Step 2  About you           name, email, phone (filled in for you when you are logged in)
+     Step 3  Your project        the message + a summary, then Send
+
+  A progress bar at the top shows the step, and the Back / Continue buttons
+  stay at the bottom of the screen where your thumb is.
+  After sending, a "Request sent" screen appears instead of a pop-up.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:AndiswaConsultationApp.Controls"
+             x:Class="AndiswaConsultationApp.Pages.ContactPage"
+             BackgroundColor="{DynamicResource PageBg}"
+             ControlTemplate="{StaticResource TabPage}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="0">
+
+        <!-- ===== HEADER: title + step progress ===== -->
+        <VerticalStackLayout x:Name="Header" Grid.Row="0" Padding="20,44,20,12" Spacing="12">
+            <VerticalStackLayout Spacing="0">
+                <Label Text="New quote" Style="{StaticResource ScreenTitle}" />
+                <Label x:Name="StepLabel" Text="Step 1 of 3 · Service" Style="{StaticResource Caption}" />
+            </VerticalStackLayout>
+
+            <!-- Three bars: blue = done / current, grey = still to come (coloured in ContactPage.xaml.cs) -->
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
+                <BoxView x:Name="Bar1" HeightRequest="6" CornerRadius="3" />
+                <BoxView x:Name="Bar2" Grid.Column="1" HeightRequest="6" CornerRadius="3" />
+                <BoxView x:Name="Bar3" Grid.Column="2" HeightRequest="6" CornerRadius="3" />
+            </Grid>
+        </VerticalStackLayout>
+
+        <!-- ===== THE STEPS ===== -->
+        <ScrollView x:Name="StepScroll" Grid.Row="1">
+            <VerticalStackLayout Padding="20,8,20,24" Spacing="14">
+
+                <controls:ErrorBox x:Name="ErrorBox" />
+
+                <!-- ===== STEP 1: WHAT DO YOU NEED? ===== -->
+                <VerticalStackLayout x:Name="Step1" Spacing="14">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="What can we help with?" Style="{StaticResource SectionTitle}" />
+                        <Label Text="Tap one. You can explain the details later." Style="{StaticResource Caption}" />
+                    </VerticalStackLayout>
+
+                    <!-- The service tiles are created in ContactPage.xaml.cs (BuildServiceTiles) -->
+                    <Grid x:Name="ServiceGrid" ColumnDefinitions="*,*" ColumnSpacing="12" RowSpacing="12" />
+
+                    <!-- Prefer to talk? One-tap buttons that open the phone's own apps -->
+                    <Border Style="{StaticResource Card}" Margin="0,10,0,0">
+                        <VerticalStackLayout Spacing="12">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Prefer to talk?" Style="{StaticResource CardTitle}" />
+                                <Label Text="{Binding Hours}" Style="{StaticResource Caption}" />
+                            </VerticalStackLayout>
+                            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                                <Button Text="Call" Style="{StaticResource OutlineButton}" HeightRequest="44" FontSize="13"
+                                        Clicked="OnCallClicked" />
+                                <Button Grid.Column="1" Text="WhatsApp" Style="{StaticResource OutlineButton}" HeightRequest="44"
+                                        FontSize="13" BackgroundColor="{DynamicResource SuccessSoft}"
+                                        TextColor="{DynamicResource Success}" Clicked="OnWhatsAppClicked" />
+                                <Button Grid.Column="2" Text="Email" Style="{StaticResource OutlineButton}" HeightRequest="44"
+                                        FontSize="13" Clicked="OnEmailClicked" />
+                            </Grid>
+                            <Label Text="{Binding Address}" Style="{StaticResource Caption}" FontSize="12">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnAddressTapped" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- ===== STEP 2: ABOUT YOU ===== -->
+                <VerticalStackLayout x:Name="Step2" Spacing="0" IsVisible="False">
+                    <Label Text="About you" Style="{StaticResource SectionTitle}" />
+                    <Label Text="So we know who to reply to." Style="{StaticResource Caption}" />
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout>
+                            <Label Text="First name" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource FieldBorder}">
+                                <Entry x:Name="FirstNameEntry" Placeholder="Ayanda" Style="{StaticResource FieldEntry}"
+                                       ReturnType="Next" />
+                            </Border>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Last name" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource FieldBorder}">
+                                <Entry x:Name="LastNameEntry" Placeholder="Zulu" Style="{StaticResource FieldEntry}"
+                                       ReturnType="Next" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Label Text="Email address" Style="{StaticResource FieldLabel}" />
+                    <Border Style="{StaticResource FieldBorder}">
+                        <Entry x:Name="EmailEntry" Placeholder="you@company.co.za" Keyboard="Email"
+                               IsSpellCheckEnabled="False" IsTextPredictionEnabled="False"
+                               Style="{StaticResource FieldEntry}" ReturnType="Next" />
+                    </Border>
+
+                    <Label Text="Phone number (optional)" Style="{StaticResource FieldLabel}" />
+                    <Border Style="{StaticResource FieldBorder}">
+                        <Entry x:Name="PhoneEntry" Placeholder="067 123 4567" Keyboard="Telephone"
+                               Style="{StaticResource FieldEntry}" ReturnType="Done" />
+                    </Border>
+
+                    <Label Text="We only use your details to reply to this request."
+                           Style="{StaticResource Caption}" FontSize="12" Margin="4,12,0,0" />
+                </VerticalStackLayout>
+
+                <!-- ===== STEP 3: YOUR PROJECT ===== -->
+                <VerticalStackLayout x:Name="Step3" Spacing="0" IsVisible="False">
+                    <Label Text="Your project" Style="{StaticResource SectionTitle}" />
+                    <Label Text="A few lines is enough: what, for whom, and by when." Style="{StaticResource Caption}" />
+
+                    <Border Style="{StaticResource FieldBorder}" Padding="10,6" Margin="0,14,0,0">
+                        <Editor x:Name="MessageEditor" Placeholder="e.g. A logo and business cards for my new bakery, ready by the end of the month."
+                                PlaceholderColor="{DynamicResource Soft}" TextColor="{DynamicResource Ink}" FontSize="15"
+                                BackgroundColor="Transparent" HeightRequest="150" MaxLength="4000"
+                                TextChanged="OnMessageChanged" />
+                    </Border>
+                    <Label x:Name="CountLabel" Text="0 / 4000" Style="{StaticResource Caption}" FontSize="11"
+                           HorizontalOptions="End" Margin="0,6,4,0" />
+
+                    <!-- Summary of steps 1 and 2: tap "Edit" to go back -->
+                    <Border Style="{StaticResource Card}" Margin="0,14,0,0" Padding="16">
+                        <VerticalStackLayout Spacing="12">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <VerticalStackLayout Spacing="0">
+                                    <Label Text="Service" Style="{StaticResource Caption}" FontSize="12" />
+                                    <Label x:Name="SummaryService" Style="{StaticResource CardTitle}" />
+                                </VerticalStackLayout>
+                                <Label Grid.Column="1" Text="Edit" Style="{StaticResource LinkLabel}">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnEditServiceTapped" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </Grid>
+                            <BoxView HeightRequest="1" Color="{DynamicResource Line}" />
+                            <Grid ColumnDefinitions="*,Auto">
+                                <VerticalStackLayout Spacing="0">
+                                    <Label Text="Reply to" Style="{StaticResource Caption}" FontSize="12" />
+                                    <Label x:Name="SummaryContact" Style="{StaticResource CardTitle}" />
+                                    <Label x:Name="SummaryEmail" Style="{StaticResource Caption}" />
+                                </VerticalStackLayout>
+                                <Label Grid.Column="1" Text="Edit" Style="{StaticResource LinkLabel}">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnEditDetailsTapped" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Who will read it -->
+                    <HorizontalStackLayout Spacing="12" Margin="4,16,0,0">
+                        <Border BackgroundColor="{DynamicResource Primary}" StrokeThickness="0" StrokeShape="RoundRectangle 20"
+                                WidthRequest="40" HeightRequest="40">
+                            <Label Text="{Binding OwnerInitials}" FontSize="14" TextColor="{DynamicResource OnPrimary}"
+                                   FontFamily="{DynamicResource HeadingFont}"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+                        <VerticalStackLayout VerticalOptions="Center" Spacing="0">
+                            <Label Style="{StaticResource Caption}" FontSize="12" Text="Your request goes straight to" />
+                            <Label Style="{StaticResource CardTitle}" FontSize="14">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding OwnerName}" />
+                                        <Span Text=" · " />
+                                        <Span Text="{Binding OwnerTitle}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+
+                <!-- A red sentence when a step is not filled in correctly -->
+                <Label x:Name="StepError" IsVisible="False" FontSize="13" TextColor="{DynamicResource ErrorText}"
+                       Margin="4,0,0,0" />
+
+                <!-- ===== DONE: shown after sending ===== -->
+                <VerticalStackLayout x:Name="DonePanel" IsVisible="False" Spacing="14" Padding="0,40,0,0">
+                    <Border BackgroundColor="{DynamicResource SuccessSoft}" StrokeThickness="0" StrokeShape="RoundRectangle 48"
+                            WidthRequest="96" HeightRequest="96" HorizontalOptions="Center">
+                        <Path Stroke="{DynamicResource Success}" StrokeThickness="3.5" StrokeLineCap="Round" StrokeLineJoin="Round"
+                              WidthRequest="40" HeightRequest="40" Aspect="Uniform"
+                              HorizontalOptions="Center" VerticalOptions="Center" Data="M20,6 L9,17 L4,12" />
+                    </Border>
+                    <Label x:Name="DoneTitle" Text="Request sent!" Style="{StaticResource ScreenTitle}" FontSize="24"
+                           HorizontalTextAlignment="Center" />
+                    <Label x:Name="DoneText" Style="{StaticResource Caption}" FontSize="14" LineHeight="1.4"
+                           HorizontalTextAlignment="Center" Margin="10,0" />
+                    <Button x:Name="TrackButton" Text="Track it in my account" Style="{StaticResource PrimaryButton}"
+                            Margin="0,16,0,0" Clicked="OnTrackClicked" />
+                    <Button Text="Back to home" Style="{StaticResource OutlineButton}" Clicked="OnHomeClicked" />
+                    <Label Text="Send another request" Style="{StaticResource LinkLabel}" HorizontalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnNewRequestTapped" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- ===== BOTTOM ACTIONS (where your thumb is) ===== -->
+        <Grid x:Name="ActionBar" Grid.Row="2" ColumnDefinitions="Auto,*" ColumnSpacing="10" Padding="20,10,20,12"
+              BackgroundColor="{DynamicResource PageBg}">
+            <Button x:Name="BackButton" Text="Back" Style="{StaticResource OutlineButton}" WidthRequest="100"
+                    IsVisible="False" Clicked="OnBackClicked" />
+            <Button x:Name="NextButton" Grid.Column="1" Text="Continue" Style="{StaticResource PrimaryButton}"
+                    Clicked="OnNextClicked" />
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  TestimonialsPage.xaml  -  all client reviews, like reviews in an app store:
+  a score summary at the top, then one card per review.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:AndiswaConsultationApp.Models"
+             x:Class="AndiswaConsultationApp.Pages.TestimonialsPage"
+             Title="Reviews"
+             BackgroundColor="{DynamicResource PageBg}"
+             Shell.NavBarIsVisible="True">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,8,20,32" Spacing="12">
+
+            <!-- ===== SCORE SUMMARY ===== -->
+            <Border BackgroundColor="{DynamicResource PrimarySoft}" StrokeThickness="0" StrokeShape="RoundRectangle 20" Padding="18">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                    <Label Text="5.0" FontSize="40" FontFamily="{DynamicResource HeadingFont}"
+                           TextColor="{DynamicResource Primary}" VerticalOptions="Center" />
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                        <Label Text="★★★★★" FontSize="18" TextColor="{DynamicResource Accent}" />
+                        <Label x:Name="CountLabel" Style="{StaticResource Caption}" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- ===== ONE CARD PER REVIEW ===== -->
+            <VerticalStackLayout Spacing="12" BindableLayout.ItemsSource="{x:Static models:SiteContent.Testimonials}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}">
+                            <VerticalStackLayout Spacing="12">
+                                <Grid ColumnDefinitions="44,*,Auto" ColumnSpacing="12">
+                                    <Border BackgroundColor="{Binding AvatarColor}" StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 22" WidthRequest="44" HeightRequest="44">
+                                        <Label Text="{Binding Initials}" FontSize="15" TextColor="White"
+                                               FontFamily="{DynamicResource HeadingFont}"
+                                               HorizontalOptions="Center" VerticalOptions="Center" />
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0">
+                                        <Label Text="{Binding Name}" Style="{StaticResource CardTitle}" FontSize="14" />
+                                        <Label Text="{Binding Role}" FontSize="12" TextColor="{DynamicResource Muted}" />
+                                    </VerticalStackLayout>
+                                    <Label Grid.Column="2" Text="{Binding Stars}" FontSize="12" TextColor="{DynamicResource Accent}"
+                                           VerticalOptions="Start" />
+                                </Grid>
+                                <Label Text="{Binding Quote}" FontSize="14" LineHeight="1.45" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

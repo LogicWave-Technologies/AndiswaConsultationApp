@@ -6,13 +6,15 @@ namespace AndiswaConsultationApp.Pages;
 public partial class ClientDashboardPage : ContentPage
 {
     private readonly ApiService _api;   // our link to the API
+    private readonly Controls.ErrorBox _errorBox;
 
     public ClientDashboardPage(ApiService api)
     {
         InitializeComponent();
         _api = api;
+        _errorBox = (Controls.ErrorBox)FindByName("ErrorBox");
 
-        ErrorBox.Retry += async (_, _) => await LoadAsync();   // "Try again" button
+        _errorBox.Retry += async (_, _) => await LoadAsync();   // "Try again" button
     }
 
     // Runs every time the dashboard comes on screen, so the status is always up to date
@@ -47,7 +49,7 @@ public partial class ClientDashboardPage : ContentPage
         if (ClientSession.Token is not { } token)
             return;
 
-        ErrorBox.Hide();
+        _errorBox.Hide();
         if (showSpinner)
             SetBusy(true);
 
@@ -60,12 +62,12 @@ public partial class ClientDashboardPage : ContentPage
         {
             // The login expired or the account was removed: log out and ask to log in again
             ClientSession.Clear();
-            await DisplayAlert("Please log in again", "Your login has expired. Please log in again.", "OK");
+            await DisplayAlertAsync("Please log in again", "Your login has expired. Please log in again.", "OK");
             await AppNavigation.GoToTabAsync(AppNavigation.ClientLoginRoute);
         }
         catch (Exception ex)
         {
-            ErrorBox.Show(ApiService.FriendlyError(ex));
+            _errorBox.Show(ApiService.FriendlyError(ex));
         }
         finally
         {
@@ -105,7 +107,7 @@ public partial class ClientDashboardPage : ContentPage
     // "Log out" button in the header
     private async void OnLogoutClicked(object? sender, EventArgs e)
     {
-        var sure = await DisplayAlert("Log out", "Do you want to log out of the client portal?", "Log out", "Cancel");
+        var sure = await DisplayAlertAsync("Log out", "Do you want to log out of the client portal?", "Log out", "Cancel");
         if (!sure)
             return;
 

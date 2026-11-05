@@ -53,7 +53,7 @@ public static class QuickContact
         {
             // No app can open it (e.g. no dialler on a tablet / PC)
             if (Shell.Current is not null)
-                await Shell.Current.DisplayAlert("Not available", "This device cannot open that. You can reach us at " + Phone + ".", "OK");
+                await Shell.Current.DisplayAlertAsync("Not available", "This device cannot open that. You can reach us at " + Phone + ".", "OK");
         }
     }
 

@@ -54,7 +54,7 @@ before you can reach Home. These two screens sit outside the tab bar in `AppShel
 - `Models/Models.cs` – the content (services, projects, reviews …)
 
   ## Video Demonistration link
-  https://youtu.be/EXid-ay0ZVQ?si=ktJqY0XKkH3d1Nvg (the link is updated because the video got removed from arch).
+https://youtu.be/8IAjMSKXqBQ?si=IxWlFAezJrzbli_7  (the link is updated because the video got removed from arch).
 
   ## Azure link
   andiswa-business-api-buc0hwgybmhnabhs.southafricanorth-01.azurewebsites.net

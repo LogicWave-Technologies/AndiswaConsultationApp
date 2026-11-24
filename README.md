@@ -53,11 +53,11 @@ before you can reach Home. These two screens sit outside the tab bar in `AppShel
 - `Pages/` – one XAML + code file per screen
 - `Models/Models.cs` – the content (services, projects, reviews …)
 
-  ## Video Demonistration link
-https://youtu.be/8IAjMSKXqBQ?si=IxWlFAezJrzbli_7  (the link is updated because the video got removed from arch).
+## Video Demonistration link
+https://youtu.be/1DrzxxVtjTo
 
-  ## Azure link
-  andiswa-business-api-buc0hwgybmhnabhs.southafricanorth-01.azurewebsites.net
+## Azure link
+andiswa-business-api-buc0hwgybmhnabhs.southafricanorth-01.azurewebsites.net
   
 
 The website-only parts (`SiteFooter`, `NewsletterBox`, `SectionHeader`) were removed from the app on purpose.
